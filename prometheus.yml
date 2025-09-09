@@ -1,0 +1,12 @@
+global:
+  scrape_interval: 30s
+  scrape_timeout: 30s
+
+scrape_configs:
+  - job_name: nodes
+    static_configs:
+      - targets:
+        - '192.168.0.44:9100'
+        - '192.168.0.45:9100'
+        - '192.168.0.46:9100'
+        - 'localhost:9100'
