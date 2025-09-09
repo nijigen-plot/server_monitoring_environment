@@ -1,0 +1,38 @@
+services:
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    container_name: prometheus
+    profiles: ["admin"]
+    ports:
+      - '9090:9090'
+    volumes:
+      - './prometheus.yml:/etc/prometheus/prometheus.yml'
+      - 'prometheus-data:/prometheus'
+    restart: unless-stopped
+  grafana:
+    image: grafana/grafana:main-ubuntu
+    container_name: grafana
+    environment:
+      - "GF_PATHS_CONFIG=/etc/grafana/custom.ini"
+    profiles: ["admin"]
+    ports:
+      - '3030:3000'
+    volumes:
+      - './custom.ini:/etc/grafana/custom.ini'
+      - 'grafana-data:/var/lib/grafana'
+    restart: unless-stopped
+  node_exporter:
+    image: prom/node-exporter:v1.9.1
+    container_name: node_exporter
+    profiles: ["exporter"]
+    command:
+      - "--path.rootfs=/host"
+    ports:
+      - '9100:9100'
+    pid: "host"
+    volumes:
+      - '/:/host:ro'
+    restart: unless-stopped
+volumes:
+  prometheus-data: {}
+  grafana-data: {}
